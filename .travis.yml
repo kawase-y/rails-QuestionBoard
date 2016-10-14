@@ -1,3 +1,7 @@
+env:
+  global:
+    secure: e+TXLPh4QO7tjy0qCYbmVlCT8jhczqBKLm1f3ZN3kAaY8ZkpJBZiobiJJL7fxQxHBoQ91UN7rMUVrHAh2TXd+xKxhwaiuPp6QNA/+rZtnD3l44+Hsq7XiZUMSuPJqqGrdFUG71hQp5GKKHT1s9oBSFU925Aya7BM0fO5kAY4JcucKtGDD+11bSfZBwkxviFGNFq/ZBDlyP0p/VMGfklOJ2BlJnOEoie9uHHgjtQ6QqRqM++joQl62ElI/iCcml4Gstpi5y00sHltdV23OxZuEIpcndwqLMjW7Ql4oTY4fUDhq+I9sIl21rtjldwa3w+Xyr/7gw2mOUR81+61vSLUAEg1PjEwBlofZ4Dl2OD9oz131n1ruaIRJz5s2+L4/qls+3WauYpJ4kuYrxHP2b+9sr2sG5Xuo7Gsqv2GxyVmMnpmhkAxnN8JsOXxduV3Mid/o3DrVQnBL3GrS7FNEvD3+ybm/eWiXKt8ERvJTELFuroauncrZw0KLKfKn+a/LQfsMBe1gIfhDbXtXsogLKzswauP0Z8hoMvDDLdtMeUbe1uuq2ETAOme9D2Aidyo6dQW54Al32Sw5We13h9lRy4pNmudhV0UQvgFkiT4z4ugtGaRfxgHqaGoKP4+PuEbaf4gvfh+liLteLcu8qNPJqEgyH6Gg9eRi3DFTJjHzMXOwiI=
+
 language: ruby
 rvm:
 - 2.3.1
@@ -10,11 +14,22 @@ before_script:
 - bundle exec rake db:migrate RAILS_ENV=test
 script:
 - bundle exec rake test
+
+after_success:
+- curl -X POST -H 'Authorization:Bearer '$LINE_API_KEY -F "message=Success" 'https://notify-api.line.me/api/notify'
+
+after_failure:
+- curl -X POST -H 'Authorization:Bearer '$LINE_API_KEY -F "message=Failure" 'https://notify-api.line.me/api/notify'
+
+
 deploy:
   provider: heroku
   api_key:
     secure: PjGGlgETx4HlHVXdPTlJuhXSIQohyfucvkgsLETCRsTb5kWO4gUeHZNQLl/rtgkWU0uhlgfMGxZ494Glf2oDKhb7eC8NBcG0Km+bZwCkc51cbqtt04uzkydZgnOwVrWw+fMrWQ7y3rb/PB3Nc1aDJOTZBKkNrcgHUJVmcPk+f9/4Mss/KibrQRrVvA8lyYEkgOXImaqOU5cPHWb2nRXqoXz9dGWA+qs3LJd1ySmdPahRYYJs4GSQhzgGcLZMTpIj4DQ+Wxp2C3mPyPqYHX/EWfZEqe8PD6Zt4uFsnQcbUwreyUMVYJlVOx4KJ1ITk4ti0UUMfznhUd3DY2GMOKFiM9pVREwMFE1de5jlRp1i+1JYt0ZRiaTFSd31fUbRj0MR4hLzAL8INP+V5zvgL+sV4njz1vMT2XucD8XnZVJ9RUFmvKFtqy29NafmcFHFjcxPl/RkMrTG7iicc3kGAPKPLbS1kdphAZPWNF8oI4xySGFWF8LAhPUMcGX/IWkJjuinp8KqnXT7bBgezhgl1s5lcEn8stoQ+T1gj08oLPlYngjQ556nPSPulud+3ZRled9f80PNEGT4dbvseKqp3AMAdYA/sJ9V1LLcVRn1NzqppjBiMqJWjTUnu5DnlGx+CjXkaMyFusgtAzLJSweLjIybGaoyLOOvsU9upst1KcCrSN4=
-  run: "rake db:migrate"
+  run: rake db:migrate
   app: questionboard
   on:
     repo: kawase-y/rails-QuestionBoard
+
+after_deploy:
+- curl -X POST -H 'Authorization:Bearer '$LINE_API_KEY -F "message=Deployed" 'https://notify-api.line.me/api/notify'
