@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
+
+
+  get 'users/show/:name' => 'users#show'
+
+
+
   resources :items
   get 'test/return'
+
+  root :to => 'users#root'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

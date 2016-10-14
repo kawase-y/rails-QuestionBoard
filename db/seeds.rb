@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+@item = Item.new
+@item.name = 'kawase-y'
+@item.price = 111
+@item.description = 'wwwwwwwwwwwww'
+@item.save
